@@ -5,4 +5,4 @@ from .views import *
 
 urlpatterns = [ 
     path( '' ,  students)
- ]
+]
