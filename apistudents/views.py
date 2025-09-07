@@ -20,7 +20,7 @@ def apiStudent(request):
             return Response(serializers.data , status=status.HTTP_201_CREATED)
         return Response(serializers.errors , status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET' , 'PUT'])
 def apiStudentPK(request , pk):
     try:
         student = Students.objects.get(pk = pk)   #get is used for take particular object
@@ -30,5 +30,15 @@ def apiStudentPK(request , pk):
     if request.method == 'GET':
         serializer = Studentserializer(student)
         return Response( serializer.data , status=status.HTTP_200_OK)
+
+    elif request.method == 'PUT':
+        serializer = Studentserializer( student , data = request.data )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data , status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
+        
+
     
    
