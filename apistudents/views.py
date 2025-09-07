@@ -19,5 +19,16 @@ def apiStudent(request):
             serializers.save()
             return Response(serializers.data , status=status.HTTP_201_CREATED)
         return Response(serializers.errors , status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def apiStudentPK(request , pk):
+    try:
+        student = Students.objects.get(pk = pk)   #get is used for take particular object
+    except Students.DoesNotExist:
+        return Response(status= status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = Studentserializer(student)
+        return Response( serializer.data , status=status.HTTP_200_OK)
     
    
