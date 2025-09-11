@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from employee.models import Employee as employeemodel
+from django.http import Http404
 
 # Create your views here.
 
@@ -61,3 +62,25 @@ class Employee( APIView ):
             return Response(serializer.data , status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)      
    
+class Employee_PK( APIView ):
+    def get_object( self  , pk ):
+        try:
+            return employeemodel.objects.get( pk = pk )
+        except employeemodel.DoesNotExist:
+            raise Http404
+    def get( self , request , pk ):
+        employee = self.get_object( pk )
+        serializer = Employeeserializer( employee )
+        return Response( serializer.data , status=status.HTTP_200_OK )
+    def put( self , request , pk ):
+        employee = self.get_object( pk )
+        serilazer = Employeeserializer( employee , data = request.data )
+        if serilazer.is_valid():
+            serilazer.save()
+            return Response(serilazer.data , status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete( self , request ,pk ):
+        employee = self.get_object(pk)
+        employee.delete()
+        return Response( status=status.HTTP_204_NO_CONTENT )

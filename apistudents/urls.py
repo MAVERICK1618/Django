@@ -7,4 +7,5 @@ urlpatterns = [
 
 
     path('employee/' , Employee.as_view()),
+    path('employee/<int:pk>/' , Employee_PK.as_view())
  ]
