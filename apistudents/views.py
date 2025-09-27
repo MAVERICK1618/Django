@@ -131,6 +131,7 @@ class Employee_PK(generics.RetrieveAPIView , generics.UpdateAPIView , generics.D
 
 #ViewSet
 
+'''
 class EmployeeViewset(viewsets.ViewSet):
     def list(self , request):
         queryset = employeemodel.objects.all()
@@ -161,7 +162,11 @@ class EmployeeViewset(viewsets.ViewSet):
         employee = get_object_or_404(employeemodel , pk = pk)
         employee.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
+    '''
+
+class EmployeeViewset(viewsets.ModelViewSet):
+    queryset = employeemodel.objects.all()
+    serializer_class = Employeeserializer     
     
     
 
