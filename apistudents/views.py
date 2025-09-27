@@ -88,7 +88,7 @@ def apiStudentPK(request , pk):
 #         employee.delete()
 #         return Response( status=status.HTTP_204_NO_CONTENT )
 
-
+"""
 # mixins 
 
 class Employee(mixins.ListModelMixin , mixins.CreateModelMixin , generics.GenericAPIView):
@@ -113,3 +113,16 @@ class Employee_PK(generics.GenericAPIView , mixins.RetrieveModelMixin , mixins.D
     
     def delete(self , request , pk):
         return self.destroy(request , pk) 
+"""
+
+# Generics singeleAPIView
+class Employee(generics.ListAPIView , generics.CreateAPIView):
+    queryset = employeemodel.objects.all()
+    serializer_class = Employeeserializer
+
+
+# Generics pk based operations
+class Employee_PK(generics.RetrieveAPIView , generics.UpdateAPIView , generics.DestroyAPIView):
+    queryset = employeemodel.objects.all()
+    serializer_class = Employeeserializer
+    lookup_field = 'pk'
