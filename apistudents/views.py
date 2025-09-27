@@ -7,6 +7,9 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from employee.models import Employee as employeemodel
 from django.http import Http404
+from rest_framework import mixins
+from rest_framework import generics
+
 
 # Create your views here.
 
@@ -50,37 +53,53 @@ def apiStudentPK(request , pk):
 
 #  creating Class Based Views
 
-class Employee( APIView ):
-    def get( self , request ):
-        employee = employeemodel.objects.all()
-        serilaizer = Employeeserializer( employee , many = True )
-        return Response( serilaizer.data , status=status.HTTP_200_OK )  
-    def put(self , request):
-        serializer = Employeeserializer( data = request.data )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data , status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)      
+# class Employee( APIView ):
+#     def get( self , request ):
+#         employee = employeemodel.objects.all()
+#         serilaizer = Employeeserializer( employee , many = True )
+#         return Response( serilaizer.data , status=status.HTTP_200_OK )  
+#     def put(self , request):
+#         serializer = Employeeserializer( data = request.data )
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data , status=status.HTTP_201_CREATED)
+#         return Response(status=status.HTTP_400_BAD_REQUEST)      
    
-class Employee_PK( APIView ):
-    def get_object( self  , pk ):
-        try:
-            return employeemodel.objects.get( pk = pk )
-        except employeemodel.DoesNotExist:
-            raise Http404
-    def get( self , request , pk ):
-        employee = self.get_object( pk )
-        serializer = Employeeserializer( employee )
-        return Response( serializer.data , status=status.HTTP_200_OK )
-    def put( self , request , pk ):
-        employee = self.get_object( pk )
-        serilazer = Employeeserializer( employee , data = request.data )
-        if serilazer.is_valid():
-            serilazer.save()
-            return Response(serilazer.data , status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+# class Employee_PK( APIView ):
+#     def get_object( self  , pk ):
+#         try:
+#             return employeemodel.objects.get( pk = pk )
+#         except employeemodel.DoesNotExist:
+#             raise Http404
+#     def get( self , request , pk ):
+#         employee = self.get_object( pk )
+#         serializer = Employeeserializer( employee )
+#         return Response( serializer.data , status=status.HTTP_200_OK )
+#     def put( self , request , pk ):
+#         employee = self.get_object( pk )
+#         serilazer = Employeeserializer( employee , data = request.data )
+#         if serilazer.is_valid():
+#             serilazer.save()
+#             return Response(serilazer.data , status=status.HTTP_201_CREATED)
+#         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    def delete( self , request ,pk ):
-        employee = self.get_object(pk)
-        employee.delete()
-        return Response( status=status.HTTP_204_NO_CONTENT )
+#     def delete( self , request ,pk ):
+#         employee = self.get_object(pk)
+#         employee.delete()
+#         return Response( status=status.HTTP_204_NO_CONTENT )
+
+
+# mixins 
+
+class Employee(mixins.ListModelMixin , mixins.CreateModelMixin , generics.GenericAPIView):
+    queryset = employeemodel.objects.all()
+    serializer_class = Employeeserializer
+
+    def get(self , request):
+        return self.list(request)
+    
+    def post(self , request):
+        return self.create(request)
+    
+class Employee_PK(generics.GenericAPIView):
+    pass
