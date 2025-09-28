@@ -11,6 +11,7 @@ from rest_framework import mixins
 from rest_framework import generics , viewsets
 from blogs.models import Blog , Comments
 from blogs.serializers import BlogSerializers , CommentsSerializers
+from .Paginations import CustomePagination
 
 
 # Create your views here.
@@ -90,9 +91,10 @@ def apiStudentPK(request , pk):
 #         employee.delete()
 #         return Response( status=status.HTTP_204_NO_CONTENT )
 
+
+
 """
 # mixins 
-
 class Employee(mixins.ListModelMixin , mixins.CreateModelMixin , generics.GenericAPIView):
     queryset = employeemodel.objects.all()
     serializer_class = Employeeserializer
@@ -117,6 +119,8 @@ class Employee_PK(generics.GenericAPIView , mixins.RetrieveModelMixin , mixins.D
         return self.destroy(request , pk) 
 """
 
+
+
 """
 # Generics singeleAPIView
 class Employee(generics.ListAPIView , generics.CreateAPIView):
@@ -131,8 +135,8 @@ class Employee_PK(generics.RetrieveAPIView , generics.UpdateAPIView , generics.D
     lookup_field = 'pk'
 """
 
-#ViewSet
 
+#ViewSet
 '''
 class EmployeeViewset(viewsets.ViewSet):
     def list(self , request):
@@ -169,7 +173,11 @@ class EmployeeViewset(viewsets.ViewSet):
 class EmployeeViewset(viewsets.ModelViewSet):
     queryset = employeemodel.objects.all()
     serializer_class = Employeeserializer 
+    pagination_class = CustomePagination
 
+
+
+#Nested Serializers
 class BlogView(generics.ListCreateAPIView):
     queryset =  Blog.objects.all()
     serializer_class = BlogSerializers
@@ -178,6 +186,7 @@ class CommentView(generics.ListCreateAPIView):
     queryset = Comments.objects.all()
     serializer_class = CommentsSerializers
 
+#PK nested serializers
 class BlogDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Blog.objects.all()
     serializer_class = BlogSerializers
