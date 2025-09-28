@@ -9,6 +9,8 @@ from employee.models import Employee as employeemodel
 from django.http import Http404
 from rest_framework import mixins
 from rest_framework import generics , viewsets
+from blogs.models import Blog , Comments
+from blogs.serializers import BlogSerializers , CommentsSerializers
 
 
 # Create your views here.
@@ -166,9 +168,25 @@ class EmployeeViewset(viewsets.ViewSet):
 
 class EmployeeViewset(viewsets.ModelViewSet):
     queryset = employeemodel.objects.all()
-    serializer_class = Employeeserializer     
-    
-    
+    serializer_class = Employeeserializer 
+
+class BlogView(generics.ListCreateAPIView):
+    queryset =  Blog.objects.all()
+    serializer_class = BlogSerializers
+
+class CommentView(generics.ListCreateAPIView):
+    queryset = Comments.objects.all()
+    serializer_class = CommentsSerializers
+
+class BlogDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializers
+    lookup_field = 'pk'
+
+class CommentsDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comments.objects.all()
+    serializer_class = CommentsSerializers
+    lookup_field = 'pk'
 
 
 
