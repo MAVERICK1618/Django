@@ -196,6 +196,3 @@ class CommentsDetailsView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comments.objects.all()
     serializer_class = CommentsSerializers
     lookup_field = 'pk'
-
-
-
