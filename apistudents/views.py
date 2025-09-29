@@ -12,6 +12,11 @@ from rest_framework import generics , viewsets
 from blogs.models import Blog , Comments
 from blogs.serializers import BlogSerializers , CommentsSerializers
 from .Paginations import CustomePagination
+from employee.filters import EmployeeFilter
+from rest_framework.filters import SearchFilter
+from rest_framework.permissions import IsAuthenticated
+
+
 
 
 # Create your views here.
@@ -174,13 +179,20 @@ class EmployeeViewset(viewsets.ModelViewSet):
     queryset = employeemodel.objects.all()
     serializer_class = Employeeserializer 
     pagination_class = CustomePagination
+    filterset_class = EmployeeFilter
 
 
 
 #Nested Serializers
 class BlogView(generics.ListCreateAPIView):
+ 
+    permission_classes = [IsAuthenticated]
+
+
     queryset =  Blog.objects.all()
     serializer_class = BlogSerializers
+    filter_backends = [SearchFilter]
+    search_fields = ['blog_title']
 
 class CommentView(generics.ListCreateAPIView):
     queryset = Comments.objects.all()
